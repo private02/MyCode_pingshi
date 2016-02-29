@@ -62,13 +62,36 @@ int main()
 	}() << endl;
 	for (int i = 0;i < 1000;i++)
 	{
-		cout << [i, &a, &b]() -> int /*无需加mutable*/
+		cout << [i, &a, &b]() -> int /*无需加mutable,需要把i捕获*/
 		{
 			a = i + 3;b = i + 4;
 			cout << a << " " << b << endl;
 			return a + b;
 		}() << endl;
 		cout << [i, a, b]()mutable -> int /*必须加mutable,需要把i捕获*/
+		{
+			a = i + 5;b = i + 4;
+			cout << a << " " << b << endl;
+			return a + b;
+		}() << endl;
+	}
+	/*
+	[&]() {} 
+	[=]() {} 
+	自动捕获。。
+	
+	
+	
+	*/
+	for (int i = 0;i < 1000;i++)
+	{
+		cout << [&]() -> int /*无需加mutable（引用）*/
+		{
+			a = i + 3;b = i + 4;
+			cout << a << " " << b << endl;
+			return a + b;
+		}() << endl;
+		cout << [=]()mutable -> int /*必须加mutable*/
 		{
 			a = i + 5;b = i + 4;
 			cout << a << " " << b << endl;
