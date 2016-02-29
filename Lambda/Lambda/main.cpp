@@ -46,11 +46,35 @@ int main()
 		return a + b;
 	}(a, b) << endl;
 
-	cout << [a, b]()mutable -> int
+	cout << [&a, &b]() -> int //无需加 mutable
 	{
 		a = 3;b = 4;
+		cout << a << " " << b << endl;
 		return a + b;
 	}() << endl;
+
+	cout << [a, b]() mutable //加 mutable
+		  -> int
+	{
+		a = 3;b = 4;
+		cout << a << " " << b << endl;
+		return a + b;
+	}() << endl;
+	for (int i = 0;i < 1000;i++)
+	{
+		cout << [i, &a, &b]() -> int /*无需加mutable*/
+		{
+			a = i + 3;b = i + 4;
+			cout << a << " " << b << endl;
+			return a + b;
+		}() << endl;
+		cout << [i, a, b]()mutable -> int /*必须加mutable,需要把i捕获*/
+		{
+			a = i + 5;b = i + 4;
+			cout << a << " " << b << endl;
+			return a + b;
+		}() << endl;
+	}
 	system("pause");
 	return EXIT_SUCCESS;
 }
